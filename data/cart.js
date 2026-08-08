@@ -65,9 +65,8 @@ export function removeFromCart(productId) {
 
   saveToLocalStorage();
 
-  // to update the cart
-  document.querySelector(".js-return-to-home-link").innerHTML =
-    `${cartQuantityUpdater()} items`;
+  
+ 
 }
 
 export function cartQuantityUpdater() {

@@ -6,14 +6,18 @@ import {
   cartQuantityUpdater,
 } from "../../data/cart.js";
 
-import { products, getProduct } from "../../data/products.js";
+import { getProduct } from "../../data/products.js";
 import {
   deliveryOptions,
   getDeliveryOption,
 } from "../../data/deliveryOptions.js";
 import { formatCurrency } from "../utils/money.js";
-import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
+
 import { renderPaymentSummary } from "./paymentSummary.js";
+import checkoutHeader from "./checkoutHeader.js";
+
+import { deliveryOptionToDate } from "../utils/deliveryOptionsToDate.js";
+
 
 // the above syntax is known as default export which doesnt need the {}
 
@@ -26,10 +30,7 @@ export function renderOrderSummary() {
     const matchingProduct = getProduct(productId);
 
     const deliveryOption = getDeliveryOption(cartItem.deliveryOptionId);
-
-    const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
-    const dateString = deliveryDate.format("dddd, MMMM D");
+    const dateString = deliveryOptionToDate(deliveryOption);
     console.log(matchingProduct.id);
     cartSummaryHTML += /*template*/ `
     <div class="cart-item-container cart-item-container-${matchingProduct.id}">
@@ -95,17 +96,13 @@ export function renderOrderSummary() {
       </div>
     </div>
   `;
-
-    document.querySelector(".js-order-summary").innerHTML = cartSummaryHTML;
   });
-
+  document.querySelector(".js-order-summary").innerHTML = cartSummaryHTML;
   function deliveryOptionsHTML(matchingProduct, cartItem) {
     let HTML = "";
 
     deliveryOptions.forEach((deliveryOption) => {
-      const today = dayjs();
-      const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
-      const dateString = deliveryDate.format("dddd, MMMM D");
+      const dateString = deliveryOptionToDate(deliveryOption);
 
       const priceString =
         deliveryOption.priceCents === 0
@@ -140,21 +137,20 @@ export function renderOrderSummary() {
 
     return HTML;
   }
-  
-  
+
   document.querySelectorAll(".js-delete-link").forEach((link) => {
     link.addEventListener("click", () => {
       const productId = link.dataset.productId;
 
-      removeFromCart(productId); 
+      removeFromCart(productId);
       renderPaymentSummary();
-      document.querySelector(`.cart-item-container-${productId}`).remove();
-     
+      // document.querySelector(`.cart-item-container-${productId}`).remove();
+      renderOrderSummary();
+      checkoutHeader();
     });
   });
 
-  document.querySelector(".js-return-to-home-link").innerHTML =
-    `${cartQuantityUpdater()} items`;
+
 
   // to update
 
@@ -167,7 +163,7 @@ export function renderOrderSummary() {
       document
         .querySelector(`.cart-item-container-${productId}`)
         .classList.add("is-editing-quantity");
-        renderPaymentSummary();
+      renderPaymentSummary();
     });
   });
 
@@ -203,10 +199,6 @@ export function renderOrderSummary() {
 
   // to get the formatted date using datejs
 
-  const today = dayjs();
-  const deliveryDate = today.add(7, "days");
-
-  console.log(deliveryDate.format("dddd , MMMM D"));
 
   // this will format into saturday, october 21
 
@@ -219,7 +211,11 @@ export function renderOrderSummary() {
       updateDeliveryOption(productId, deliveryOptionId);
       renderPaymentSummary();
       renderOrderSummary();
+     
     });
   });
+
+
+
 }
 renderOrderSummary();

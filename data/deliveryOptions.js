@@ -1,3 +1,5 @@
+
+
 export const deliveryOptions = [
   {
     id: "1",
@@ -24,6 +26,13 @@ export function getDeliveryOption(deliveryOptionId) {
       deliveryOption = option;
     }
   });
+
+
+
+
   return deliveryOption || deliveryOptions[0];
   //if the user didnt give any option this will choose freedelivery
 }
+
+
+
