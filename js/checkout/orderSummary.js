@@ -3,41 +3,34 @@ import {
   removeFromCart,
   updateQuantity,
   updateDeliveryOption,
-  cartQuantityUpdater
+  cartQuantityUpdater,
 } from "../../data/cart.js";
 
-import { products } from "../../data/products.js";
-import { deliveryOptions } from "../../data/deliveryOptions.js";
+import { products, getProduct } from "../../data/products.js";
+import {
+  deliveryOptions,
+  getDeliveryOption,
+} from "../../data/deliveryOptions.js";
 import { formatCurrency } from "../utils/money.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
+import { renderPaymentSummary } from "./paymentSummary.js";
 
 // the above syntax is known as default export which doesnt need the {}
 
 export function renderOrderSummary() {
-  let matchingProduct;
   let cartSummaryHTML = "";
 
   cart.forEach((cartItem) => {
     const { productId } = cartItem;
     // productId = cartItem.productId;
+    const matchingProduct = getProduct(productId);
 
-    products.forEach((product) => {
-      if (product.id === productId) {
-        matchingProduct = product;
-      }
-    });
-    let deliveryOption;
-    const deliveryOptionId = cartItem.deliveryOptionId;
-    deliveryOptions.forEach((option) => {
-      if (option.id === deliveryOptionId) {
-        deliveryOption = option;
-      }
-    });
+    const deliveryOption = getDeliveryOption(cartItem.deliveryOptionId);
 
     const today = dayjs();
     const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
     const dateString = deliveryDate.format("dddd, MMMM D");
-
+    console.log(matchingProduct.id);
     cartSummaryHTML += /*template*/ `
     <div class="cart-item-container cart-item-container-${matchingProduct.id}">
       <div class="delivery-date">
@@ -147,13 +140,16 @@ export function renderOrderSummary() {
 
     return HTML;
   }
-
+  
+  
   document.querySelectorAll(".js-delete-link").forEach((link) => {
     link.addEventListener("click", () => {
       const productId = link.dataset.productId;
 
-      removeFromCart(productId);
+      removeFromCart(productId); 
+      renderPaymentSummary();
       document.querySelector(`.cart-item-container-${productId}`).remove();
+     
     });
   });
 
@@ -171,6 +167,7 @@ export function renderOrderSummary() {
       document
         .querySelector(`.cart-item-container-${productId}`)
         .classList.add("is-editing-quantity");
+        renderPaymentSummary();
     });
   });
 
@@ -200,6 +197,7 @@ export function renderOrderSummary() {
         alert("quantity cannot be greater than 100!");
         return;
       }
+      renderPaymentSummary();
     });
   });
 
@@ -219,7 +217,7 @@ export function renderOrderSummary() {
 
     element.addEventListener("click", () => {
       updateDeliveryOption(productId, deliveryOptionId);
-
+      renderPaymentSummary();
       renderOrderSummary();
     });
   });
