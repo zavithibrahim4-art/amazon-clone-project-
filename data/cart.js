@@ -1,20 +1,24 @@
-export let cart = JSON.parse(localStorage.getItem("cart"));
+export let cart;
+loadFromLocalStorage();
+export function loadFromLocalStorage() {
+  cart = JSON.parse(localStorage.getItem("cart"));
 
-// JSON.parse will convert the string back to an array
+  // JSON.parse will convert the string back to an array
 
-if (!cart) {
-  cart = [
-    {
-      productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-      quantity: 2,
-      deliveryOptionId: "1",
-    },
-    {
-      productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
-      quantity: 1,
-      deliveryOptionId: "2",
-    },
-  ];
+  if (!cart) {
+    cart = [
+      {
+        productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+        quantity: 2,
+        deliveryOptionId: "1",
+      },
+      {
+        productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
+        quantity: 1,
+        deliveryOptionId: "2",
+      },
+    ];
+  }
 }
 
 function saveToLocalStorage() {
@@ -24,10 +28,13 @@ function saveToLocalStorage() {
 }
 
 export function addToCart(productId) {
-  const quantity = document.querySelector(
+  const quantityElement = document.querySelector(
     `.js-product-quantity-${productId}`,
-  ).value;
+  );
 
+  // If the quantity input is not present (e.g. in unit tests or certain pages),
+  // default to 1 so the function doesn't throw when trying to read .value.
+  const quantity = quantityElement ? quantityElement.value : "1";
   let matchingItem;
 
   cart.forEach((cartItem) => {
@@ -64,9 +71,6 @@ export function removeFromCart(productId) {
   cart = newCartArray; // replace the removed item cart
 
   saveToLocalStorage();
-
-  
- 
 }
 
 export function cartQuantityUpdater() {
@@ -106,4 +110,3 @@ export function updateDeliveryOption(productId, DeliveryOptionId) {
   matchingItem.deliveryOptionId = DeliveryOptionId;
   saveToLocalStorage();
 }
-
