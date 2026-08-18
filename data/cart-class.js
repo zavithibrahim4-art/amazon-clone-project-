@@ -1,19 +1,24 @@
 class Cart {
   //like object use = instead of :
   // cartItems = undefined;
+  //property without a # is known as public property
   cartItems;
-  localStorageKey;
+
+  //#variable name means the property can only be accessed inside the class
+  //the private variable cant be changed outside the class
+  #localStorageKey;
 
   /* the constructor is a function like but it automatically runs when we CALL the class
     the constructor should be named constructor and it shouldn't return anything*/
   constructor(key) {
-    this.localStorageKey = key;
-    this.loadFromLocalStorage();
+    this.#localStorageKey = key;
+    this.#loadFromLocalStorage();
   }
 
-  //loadFromLocalStorage : function loadFromLocalStorage(){}
-  loadFromLocalStorage() {
-    this.cartItems = JSON.parse(localStorage.getItem(this.localStorageKey));
+  //#loadFromLocalStorage : function loadFromLocalStorage(){}
+  // a method can also be private
+  #loadFromLocalStorage() {
+    this.cartItems = JSON.parse(localStorage.getItem(this.#localStorageKey));
 
     // JSON.parse will convert the string back to an array
 
@@ -35,7 +40,7 @@ class Cart {
 
   //  saveToLocalStorage: function()
   saveToLocalStorage() {
-    localStorage.setItem(this.localStorageKey, JSON.stringify(this.cartItems));
+    localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cartItems));
 
     // to store the cart in the local storage to stop resetting after refresh
   }
@@ -136,3 +141,4 @@ console.log(businessCart);
 cart.addToCart("0d7f9afa-2efe-4fd9-b0fd-ba5663e0a524");
 
 console.log(businessCart instanceof Cart);
+
