@@ -1,7 +1,7 @@
 import checkoutHeader from "./checkout/checkoutHeader.js";
 import { renderOrderSummary } from "./checkout/orderSummary.js";
 import { renderPaymentSummary } from "./checkout/paymentSummary.js";
-import { loadProducts } from "../data/products.js";
+import {  loadProductsFetch } from "../data/products.js";
 
 /* a promise is a class :
   it takes a function with a param resolve
@@ -40,11 +40,7 @@ Promise.all([promise1, promise2])
   .then((results) => {
     console.log(results);
   });*/
-new Promise((resolve) => {
-  loadProducts(() => {
-    resolve();
-  });
-}).then(() => {
+loadProductsFetch().then(() => {
   renderOrderSummary();
   renderPaymentSummary();
   checkoutHeader();
