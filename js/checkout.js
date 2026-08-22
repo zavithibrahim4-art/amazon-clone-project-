@@ -40,11 +40,26 @@ Promise.all([promise1, promise2])
   .then((results) => {
     console.log(results);
   });*/
-loadProductsFetch().then(() => {
-  renderOrderSummary();
+
+
+//used local loadCart instead of the backend
+function loadCart() {
+  return new Promise((resolve) => {
+    console.log("cart loaded");
+
+    resolve("value is stored in a variable");
+  });
+}
+
+  async function loadPage() {
+    await loadProductsFetch();
+      const value = await loadCart();
+    renderOrderSummary();
   renderPaymentSummary();
   checkoutHeader();
-});
+  
+  }
+  loadPage();
 
 /*
 new Promise((resolve) => {

@@ -64,6 +64,8 @@ class Clothing extends Product {
   }
 }
 
+
+
 export function loadProductsFetch() {
   const promise = fetch("https://supersimplebackend.dev/products")
     .then((response) => {
@@ -83,10 +85,7 @@ export function loadProductsFetch() {
 }
 
 
-loadProductsFetch().then(()=>{
-  console.log("next step");
-  
-});
+
 
 /*
 
