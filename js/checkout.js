@@ -1,7 +1,7 @@
 import checkoutHeader from "./checkout/checkoutHeader.js";
 import { renderOrderSummary } from "./checkout/orderSummary.js";
 import { renderPaymentSummary } from "./checkout/paymentSummary.js";
-import {  loadProductsFetch } from "../data/products.js";
+import { loadProductsFetch } from "../data/products.js";
 
 /* a promise is a class :
   it takes a function with a param resolve
@@ -41,25 +41,30 @@ Promise.all([promise1, promise2])
     console.log(results);
   });*/
 
-
-//used local loadCart instead of the backend
-function loadCart() {
-  return new Promise((resolve) => {
-    console.log("cart loaded");
-
-    resolve("value is stored in a variable");
-  });
-}
-
-  async function loadPage() {
+async function loadPage() {
+  try {
+    //throw "value" for synchronous
+    // the value will be passed as a param to thr catch
     await loadProductsFetch();
-      const value = await loadCart();
     renderOrderSummary();
-  renderPaymentSummary();
-  checkoutHeader();
-  
+    renderPaymentSummary();
+    checkoutHeader();
+  } catch (error) {
+    console.log(error);
+    console.log("Unexpected error try again later");
   }
-  loadPage();
+}
+loadPage();
+
+const promise = new Promise((resolve, reject) => {
+  //reject was to throw an error in the future
+  // reject("unresolved"); for asynchronous
+  //the if rejected next line wont execute like return
+  resolve("Success!");
+
+}).then((value) => {
+  console.log(value);
+});
 
 /*
 new Promise((resolve) => {
