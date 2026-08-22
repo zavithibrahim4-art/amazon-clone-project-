@@ -6,13 +6,12 @@ import {
 } from "../../data/deliveryOptions.js";
 import { formatCurrency } from "../utils/money.js";
 
-
 let paymentSummaryHTML = "";
 
 export function renderPaymentSummary() {
   let shippingPriceCents = 0;
   let productPriceCents = 0;
-
+  
   cart.forEach((cartItem) => {
     const product = getProduct(cartItem.productId);
     productPriceCents += product.priceCents * cartItem.quantity;
@@ -59,5 +58,4 @@ export function renderPaymentSummary() {
         </div>`;
   document.querySelector(".js-payment-summary").innerHTML = paymentSummaryHTML;
 }
-renderPaymentSummary();
 
