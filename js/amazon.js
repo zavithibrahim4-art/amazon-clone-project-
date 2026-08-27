@@ -3,13 +3,46 @@ import { products, loadProductsFetch } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 import { cartQuantityUpdater } from "../data/cart.js";
 
-
 await loadProductsFetch();
-renderHomePageGrid();
-function renderHomePageGrid() {
+
+const params = new URLSearchParams(window.location.search);
+const searchTerm = params.get("search") || "";
+
+document.querySelector(".search-bar").value = searchTerm;
+
+renderHomePageGrid(searchTerm);
+
+document.querySelector(".search-button").addEventListener("click", runSearch);
+
+document.querySelector(".search-bar").addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    runSearch();
+  }
+});
+
+function renderHomePageGrid(searchTerm = "") {
   let productsHTML = "";
 
-  products.forEach((product) => {
+  const filteredProducts = searchTerm
+    ? products.filter((product) => {
+        const term = searchTerm.toLowerCase();
+        const nameMatches = product.name.toLowerCase().includes(term);
+        const keywordMatches = product.keywords.some((keyword) =>
+          keyword.toLowerCase().includes(term),
+        );
+        return nameMatches || keywordMatches;
+      })
+    : products;
+
+  if (filteredProducts.length === 0) {
+    document.querySelector(".js-products-grid").innerHTML =
+      `<div class="no-products-message">No products found.</div>`;
+    document.querySelector(".js-cart-quantity").innerHTML =
+      cartQuantityUpdater();
+    return;
+  }
+
+  filteredProducts.forEach((product) => {
     productsHTML += /*template*/ `
     <div class="product-container ">
       <div class="product-image-container">

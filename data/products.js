@@ -49,6 +49,7 @@ class Clothing extends Product {
     //the super gives access to the parents constructor
     super(productDetails);
     this.sizeChartLink = productDetails.sizeChartLink;
+    this.keywords = productDetails.keywords || [];
   }
 
   /*this method is declared 2nd time this will override 

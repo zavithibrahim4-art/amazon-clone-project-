@@ -1,0 +1,21 @@
+[
+  {
+    "id": "ebca39a2-98d3-4de4-a929-b67cb99511ff",
+    "orderTime": "2026-08-22T19:53:46.832Z",
+    "totalCostCents": 5251,
+    "products": [
+      {
+        "productId": "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+        "quantity": 2,
+        "estimatedDeliveryTime": "2026-08-29T19:53:46.832Z",
+        "variation": null
+      },
+      {
+        "productId": "15b6fc6f-327a-4ec4-896f-486349e85a3d",
+        "quantity": 1,
+        "estimatedDeliveryTime": "2026-08-25T19:53:46.832Z",
+        "variation": null
+      }
+    ]
+  }
+]
